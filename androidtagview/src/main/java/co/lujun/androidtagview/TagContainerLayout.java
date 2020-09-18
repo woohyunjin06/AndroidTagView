@@ -23,6 +23,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Typeface;
+import android.text.SpannableString;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -174,7 +175,7 @@ public class TagContainerLayout extends ViewGroup {
     /**
      * Tags
      */
-    private List<String> mTags;
+    private List<CharSequence> mTags;
 
     /**
      * Default image for new tags
@@ -539,7 +540,7 @@ public class TagContainerLayout extends ViewGroup {
         postInvalidate();
     }
 
-    private void onAddTag(String text, int position) {
+    private void onAddTag(CharSequence text, int position) {
         if (position < 0 || position > mChildViews.size()) {
             throw new RuntimeException("Illegal position!");
         }
@@ -774,7 +775,12 @@ public class TagContainerLayout extends ViewGroup {
      *
      * @param tags
      */
-    public void setTags(List<String> tags) {
+//    public void setTags(List<CharSequence> tags) {
+//        mTags = tags;
+//        onSetTag();
+//    }
+
+    public void setTags(List<CharSequence> tags) {
         mTags = tags;
         onSetTag();
     }
@@ -785,7 +791,7 @@ public class TagContainerLayout extends ViewGroup {
      * @param tags
      * @param colorArrayList
      */
-    public void setTags(List<String> tags, List<int[]> colorArrayList) {
+    public void setTags(List<CharSequence> tags, List<int[]> colorArrayList) {
         mTags = tags;
         mColorArrayList = colorArrayList;
         onSetTag();
@@ -796,7 +802,7 @@ public class TagContainerLayout extends ViewGroup {
      *
      * @param tags
      */
-    public void setTags(String... tags) {
+    public void setTags(CharSequence... tags) {
         mTags = Arrays.asList(tags);
         onSetTag();
     }
@@ -917,8 +923,8 @@ public class TagContainerLayout extends ViewGroup {
      *
      * @return list of selected tag text
      */
-    public List<String> getSelectedTagViewText() {
-        List<String> selectedTagText = new ArrayList<>();
+    public List<CharSequence> getSelectedTagViewText() {
+        List<CharSequence> selectedTagText = new ArrayList<>();
         for (int i = 0; i < mChildViews.size(); i++){
             TagView tagView = (TagView)mChildViews.get(i);
             if ((tagView.getIsViewSelected())){
@@ -943,7 +949,7 @@ public class TagContainerLayout extends ViewGroup {
      * @param position
      * @return
      */
-    public String getTagText(int position) {
+    public CharSequence getTagText(int position) {
         return ((TagView) mChildViews.get(position)).getText();
     }
 
@@ -952,8 +958,8 @@ public class TagContainerLayout extends ViewGroup {
      *
      * @return
      */
-    public List<String> getTags() {
-        List<String> tmpList = new ArrayList<String>();
+    public List<CharSequence> getTags() {
+        List<CharSequence> tmpList = new ArrayList<>();
         for (View view : mChildViews) {
             if (view instanceof TagView) {
                 tmpList.add(((TagView) view).getText());

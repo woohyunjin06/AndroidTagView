@@ -108,7 +108,7 @@ public class TagView extends View {
 
     private RectF mRectF;
 
-    private String mAbstractText, mOriginText;
+    private CharSequence mAbstractText, mOriginText;
 
     private boolean isUp, isMoved, isExecLongClick;
 
@@ -160,18 +160,18 @@ public class TagView extends View {
         }
     };
 
-    public TagView(Context context, String text){
+    public TagView(Context context, CharSequence text){
         super(context);
         init(context, text);
     }
 
-    public TagView(Context context, String text, int defaultImageID){
+    public TagView(Context context, CharSequence text, int defaultImageID){
         super(context);
         init(context, text);
         mBitmapImage = BitmapFactory.decodeResource(getResources(), defaultImageID);
     }
 
-    private void init(Context context, String text){
+    private void init(Context context, CharSequence text){
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mRipplePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mRipplePaint.setStyle(Paint.Style.FILL);
@@ -182,10 +182,14 @@ public class TagView extends View {
         mSlopThreshold = (int) dp2px(context, mSlopThreshold);
     }
 
+    private char[] getAsCharArray(CharSequence input) {
+        return input.toString().toCharArray();
+    }
+
     private void onDealText(){
         if(!TextUtils.isEmpty(mOriginText)) {
             mAbstractText = mOriginText.length() <= mTagMaxLength ? mOriginText
-                    : mOriginText.substring(0, mTagMaxLength - 3) + "...";
+                    : mOriginText.subSequence(0, mTagMaxLength - 3) + "...";
         }else {
             mAbstractText = "";
         }
@@ -195,12 +199,12 @@ public class TagView extends View {
         fontH = fontMetrics.descent - fontMetrics.ascent;
         if (mTextDirection == View.TEXT_DIRECTION_RTL){
             fontW = 0;
-            for (char c : mAbstractText.toCharArray()) {
+            for (char c : getAsCharArray(mAbstractText)) {
                 String sc = String.valueOf(c);
                 fontW += mPaint.measureText(sc);
             }
         }else {
-            fontW = mPaint.measureText(mAbstractText);
+            fontW = mPaint.measureText(mAbstractText, 0, mAbstractText.length());
         }
     }
 
@@ -243,18 +247,22 @@ public class TagView extends View {
             if (mTagSupportLettersRTL){
                 float tmpX = (isEnableCross() ? getWidth() + getHeight() : getWidth()) / 2
                         + fontW / 2;
-                for (char c : mAbstractText.toCharArray()) {
+                for (char c : getAsCharArray(mAbstractText)) {
                     String sc = String.valueOf(c);
                     tmpX -= mPaint.measureText(sc);
                     canvas.drawText(sc, tmpX, getHeight() / 2 + fontH / 2 - bdDistance, mPaint);
                 }
             }else {
                 canvas.drawText(mAbstractText,
+                        0,
+                        mAbstractText.length(),
                         (isEnableCross() ? getWidth() + fontW : getWidth()) / 2 - fontW / 2,
                         getHeight() / 2 + fontH / 2 - bdDistance, mPaint);
             }
         } else {
             canvas.drawText(mAbstractText,
+                    0,
+                    mAbstractText.length(),
                     (isEnableCross() ? getWidth() - getHeight() : getWidth()) / 2 - fontW / 2 + (isEnableImage() ? getHeight() / 2 : 0),
                     getHeight() / 2 + fontH / 2 - bdDistance, mPaint);
         }
@@ -448,7 +456,7 @@ public class TagView extends View {
         }
     }
 
-    public String getText(){
+    public CharSequence getText(){
         return mOriginText;
     }
 
@@ -543,9 +551,9 @@ public class TagView extends View {
     }
 
     public interface OnTagClickListener{
-        void onTagClick(int position, String text);
-        void onTagLongClick(int position, String text);
-        void onSelectedTagDrag(int position, String text);
+        void onTagClick(int position, CharSequence text);
+        void onTagLongClick(int position, CharSequence text);
+        void onSelectedTagDrag(int position, CharSequence text);
         void onTagCrossClick(int position);
     }
 

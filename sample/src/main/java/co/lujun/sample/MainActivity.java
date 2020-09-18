@@ -7,6 +7,9 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        List<String> list1 = new ArrayList<String>();
+        List<CharSequence> list1 = new ArrayList<CharSequence>();
         list1.add("Java");
         list1.add("C++");
         list1.add("Python");
@@ -51,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         list1.add("Html");
         list1.add("Welcome to use AndroidTagView!");
 
-        List<String> list2 = new ArrayList<String>();
+        List<CharSequence> list2 = new ArrayList<CharSequence>();
         list2.add("China");
         list2.add("USA");
         list2.add("Austria");
@@ -85,13 +88,13 @@ public class MainActivity extends AppCompatActivity {
         // Set custom click listener
         mTagContainerLayout1.setOnTagClickListener(new TagView.OnTagClickListener() {
             @Override
-            public void onTagClick(int position, String text) {
+            public void onTagClick(int position, CharSequence text) {
                 Toast.makeText(MainActivity.this, "click-position:" + position + ", text:" + text,
                         Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onTagLongClick(final int position, String text) {
+            public void onTagLongClick(final int position, CharSequence text) {
                 AlertDialog dialog = new AlertDialog.Builder(MainActivity.this)
                         .setTitle("long click")
                         .setMessage("You will delete this tag!")
@@ -114,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onSelectedTagDrag(int position, String text) {}
+            public void onSelectedTagDrag(int position, CharSequence text) {}
 
             @Override
             public void onTagCrossClick(int position) {
@@ -126,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
 
         mTagContainerLayout3.setOnTagClickListener(new TagView.OnTagClickListener() {
             @Override
-            public void onTagClick(int position, String text) {
+            public void onTagClick(int position, CharSequence text) {
                 List<Integer> selectedPositions = mTagContainerLayout3.getSelectedTagViewPositions();
                 //deselect all tags when click on an unselected tag. Otherwise show toast.
                 if (selectedPositions.isEmpty() || selectedPositions.contains(position)) {
@@ -142,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onTagLongClick(final int position, String text) {
+            public void onTagLongClick(final int position, CharSequence text) {
                 mTagContainerLayout3.toggleSelectTagView(position);
 
                 List<Integer> selectedPositions = mTagContainerLayout3.getSelectedTagViewPositions();
@@ -151,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onSelectedTagDrag(int position, String text) {
+            public void onSelectedTagDrag(int position, CharSequence text) {
                 ClipData clip = ClipData.newPlainText("Text", text);
                 View view = mTagContainerLayout3.getTagView(position);
                 View.DragShadowBuilder shadow = new View.DragShadowBuilder(view);
@@ -196,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
         colors.add(col1);
         colors.add(col2);
 
-        mTagcontainerLayout5.setTags(list5, colors);
+//        mTagcontainerLayout5.setTags(list5, colors);
         final EditText text = (EditText) findViewById(R.id.text_tag);
         Button btnAddTag = (Button) findViewById(R.id.btn_add_tag);
         btnAddTag.setOnClickListener(new View.OnClickListener() {
@@ -224,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
 //        recyclerView.setAdapter(adapter);
     }
 
-    private void loadImages(List<String> list) {
+    private void loadImages(List<CharSequence> list) {
         String[] avatars = new String[]{"https://forums.oneplus.com/data/avatars/m/231/231279.jpg",
                 "https://d1marr3m5x4iac.cloudfront.net/images/block/movies/17214/17214_aa.jpg",
                 "https://lh3.googleusercontent.com/-KSI1bJ1aVS4/AAAAAAAAAAI/AAAAAAAAB9c/Vrgt6WyS5OU/il/photo.jpg"};
